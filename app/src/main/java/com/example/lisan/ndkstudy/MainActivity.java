@@ -1,11 +1,16 @@
 package com.example.lisan.ndkstudy;
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -39,13 +44,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startThreads(int threads, final int iterations){
-        for(int i = 0; i < threads; ++i)
+        for(int i = 0; i < 1; ++i)
         {
             final int id = i;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    nativeWorker(id, iterations);
+                    //nativeWorker(id, iterations);
+                    AssetManager am = getAssets();
+                    try {
+                        InputStream is = am.open("1920-1080.jpg");
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        nativeGetDark(bitmap, bitmap.getWidth(), bitmap.getHeight());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }).start();
         }
